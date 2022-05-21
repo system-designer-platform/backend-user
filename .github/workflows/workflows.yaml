@@ -13,11 +13,12 @@ jobs:
     steps:
     
     - name: Login
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/auth@v0
       with:
         credentials_json: ${{ secrets.GCP_CREDENTIALS }}
     
     - name: Configure Docker
+      uses: google-github-actions/setup-gcloud@v0
       run: gcloud auth configure-docker --quiet
     
     - name: Checkout repository
