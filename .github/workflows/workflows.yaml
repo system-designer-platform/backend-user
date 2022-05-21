@@ -9,10 +9,13 @@ jobs:
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: asia-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/backend-user:${{ github.sha }}
+      IMAGE_NAME: asia-east1-docker.pkg.dev/douter/backend-user:${{ github.sha }}
     steps:
     
-    - name: Login
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    
+    - name: Login GCP
       uses: google-github-actions/auth@v0
       with:
         credentials_json: ${{ secrets.GCP_CREDENTIALS }}
@@ -22,9 +25,6 @@ jobs:
     
     - name: Configure Docker
       run: gcloud auth configure-docker asia-east1-docker.pkg.dev
-    
-    - name: Checkout repository
-      uses: actions/checkout@v2
     
     - name: Build Docker image
       run: docker build . -t $IMAGE_NAME
