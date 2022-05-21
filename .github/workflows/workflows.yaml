@@ -9,7 +9,7 @@ jobs:
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend-user:${{ github.sha }}
+      IMAGE_NAME: asia-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/backend-user:${{ github.sha }}
     steps:
     
     - name: Login
@@ -21,7 +21,7 @@ jobs:
       uses: google-github-actions/setup-gcloud@v0
     
     - name: Configure Docker
-      run: gcloud auth configure-docker --quiet
+      run: gcloud auth configure-docker asia-east1-docker.pkg.dev
     
     - name: Checkout repository
       uses: actions/checkout@v2
