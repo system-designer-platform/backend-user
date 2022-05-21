@@ -9,7 +9,7 @@ jobs:
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: asia-east1-docker.pkg.dev/douter/backend-user:${{ github.sha }}
+      IMAGE_NAME: asia-east1-docker.pkg.dev/douter/backend/user:${{ github.sha }}
     steps:
     
     - name: Checkout repository
