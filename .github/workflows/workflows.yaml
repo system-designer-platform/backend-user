@@ -35,5 +35,10 @@ jobs:
     - name: Push Docker image
       run: docker push $IMAGE_NAME
     
+    - name: 'Deploy to Cloud Run'
+      uses: 'google-github-actions/deploy-cloudrun@v0'
+      with:
+        image: $IMAGE_NAME
+        service: 'backend-user-service'
 #    - name: Deploy Docker image
 #      run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed
