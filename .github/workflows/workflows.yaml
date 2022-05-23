@@ -38,6 +38,7 @@ jobs:
     - name: Deploy to Cloud Run
       uses: google-github-actions/deploy-cloudrun@v0
       with:
+        region: asia-east1
         image: ${{ env.IMAGE_NAME }}
         service: backend-user-service
 #    - name: Deploy Docker image
