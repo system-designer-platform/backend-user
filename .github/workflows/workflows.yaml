@@ -1,19 +1,21 @@
-name: Website (ticket) - Production
+name: Backend (user) - Production
+
 on:
   push:
-    branches:
-      - production
-jobs:
+    branches: production
+
+jobs: 
   build:
-    name: Build and Push docker image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: 'Checkout'
+        uses: actions/checkout@v1
         with:
           ref: refs/heads/production
           fetch-depth: 1
 
-      - id: 'auth'
+      - name: 'Auth GCP'
+        id: 'auth'
         uses: 'google-github-actions/auth@v0'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
@@ -24,21 +26,25 @@ jobs:
       - name: 'Configure docker for artifact registry'
         shell: bash
         run: |
-          gcloud auth configure-docker ${{ inputs.registry }}
+          gcloud auth configure-docker ${{ secrets.GCP_ARTIFACT_REGISTRY }}
 
       - id: docker-build
         shell: bash
         run: |
-          docker build . -t user-${{ github.run_id }}-${{ github.run_attempt }} --platform linux/amd64
+          docker build . -t ${{ secrets.GCP_ARTIFACT_REGISTRY }}/user:${{ github.sha }} --platform linux/amd64
 
       - name: 'Push docker'
         shell: bash
         run: |
-          docker push user-${{ github.run_id }}-${{ github.run_attempt }}
+          docker push ${{ secrets.GCP_ARTIFACT_REGISTRY }}/user:${{ github.sha }}
 
+  deploy:
+    needs: use-build
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy a Cloud Run service
         id: deploy-service
         uses: google-github-actions/deploy-cloudrun@v0.1.0
         with:
-          image: user-${{ github.run_id }}-${{ github.run_attempt }}
+          image: ${{ secrets.GCP_ARTIFACT_REGISTRY }}/user:${{ github.sha }}
           service: user
